@@ -1,0 +1,15 @@
+{
+  "name": "pull-request-manager",
+  "authors": [
+    "Shaque <shaque9000@gmail.com>"
+  ],
+  "description": "A simple backbone application to check git repositories for open pull requests.",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "bootstrap": "~3.1.0",
+    "backbone": "~1.1.2",
+    "jquery": "~2.1.0",
+    "underscore": "~1.5.2"
+  }
+}
