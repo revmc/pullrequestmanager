@@ -2,6 +2,10 @@ PullRequestManager.Views.Repositories = Backbone.View.extend({
   
   template: _.template($('#tpl-repositories').html()),
   
+  initialize: function() {
+    this.listenTo(this.collection, 'change', this.render);
+  },
+  
   renderRepo: function(repository) {
     
     var repositoryView = new PullRequestManager.Views.Repository({model: repository});

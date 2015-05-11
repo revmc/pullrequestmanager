@@ -44,6 +44,7 @@ PullRequestManager.Views.RepoManagerApp = Backbone.View.extend({
     
     var repoManager = this;
     
+    // get repos associated with this user
     $.ajax(
       {
         type: 'GET',
@@ -59,7 +60,7 @@ PullRequestManager.Views.RepoManagerApp = Backbone.View.extend({
     ).fail(
         
       function(data) {
-        alert("failed");
+        alert("Connection failed: " + data.status + ' (' + data.statusText + ')');
       }
         	
     );
@@ -150,13 +151,9 @@ PullRequestManager.Views.RepoManagerApp = Backbone.View.extend({
         }
       );
       
-      var owners = new PullRequestManager.Collections.Owners(repoManager.arrOwnerObjs);
-      var ownersMenu = new PullRequestManager.Views.OwnersMenu({collection: owners});
-      $('#ownersmenu').html(ownersMenu.render().$el.html());
-      
-      repoManager.getRepositoriesForAllOrgs();
-      
     }
+
+    this.getRepositoriesForAllOrgs();
     
   },
   
@@ -239,7 +236,7 @@ PullRequestManager.Views.RepoManagerApp = Backbone.View.extend({
     var linkResponseHeaders = request.getResponseHeader('Link');
         
     // if there are any other pages of repositories for this org...
-    if (linkResponseHeaders != null) {
+    if (linkResponseHeaders !== null) {
           
       // ...then cycle through the other page links to see 
       // if any of them are "Next" pages
@@ -266,32 +263,41 @@ PullRequestManager.Views.RepoManagerApp = Backbone.View.extend({
         // ...then that was the last page of the paginated data, 
         // so proceed to the next step in the GUI setup: building 
         // the repositories menu
-        repoManager.buildRepositoriesMenu();
+        repoManager.buildPullRequestManagerInterface();
       }
           
-    } else if ((linkResponseHeaders == null) && (repoManager.repositoryByOrgResponseCount == repoManager.repositoryByOrgRequestCount)) {
+    } else if ((linkResponseHeaders === null) && (repoManager.repositoryByOrgResponseCount === repoManager.repositoryByOrgRequestCount)) {
     
       // ...else if there were no Link Response Headers, then 
       // proceed to the next step in the GUI setup: building 
       // the repositories menu
-      repoManager.buildRepositoriesMenu();
+      repoManager.buildPullRequestManagerInterface();
       
     }
         
   },
   
-  buildRepositoriesMenu: function() {
-  
+  buildPullRequestManagerInterface: function() {
+
     var repoManager = this;
     
-    // create a master collection from all the repos
-    this.allRepositoriesCollection = new PullRequestManager.Collections.Repositories(this.arrRepoObjs, {comparator: 'name'});
-    
+    /************************************
+    ** START OWNER MENU VIEW **
+    ************************************/
+
+    var owners = new PullRequestManager.Collections.Owners(this.arrOwnerObjs);
+    var ownersMenu = new PullRequestManager.Views.OwnersMenu({collection: owners});
+    $('#ownersmenu').html(ownersMenu.render().$el.html());
+      
+    /************************************
+    ** END OWNER MENU VIEW **
+    ************************************/
+
     /************************************
     ** START MONITORED REPOSITORY VIEW **
     ************************************/
     
-	this.monitoredRepositories = new PullRequestManager.Collections.Repositories(
+	this.monitoredRepositories = new PullRequestManager.Collections.MonitoredRepositories(
 	  [],
 	  {
 	    comparator: function(model) {
@@ -299,21 +305,27 @@ PullRequestManager.Views.RepoManagerApp = Backbone.View.extend({
 	    }
 	  }
 	);
-	this.monitoredRepositories.fetch();
 	
-	// sync the Monitored Repositories collection with the collection that holds all the repos
-	this.monitoredRepositories.forEach(
-	  function(repoObj) {
-	    repoManager.allRepositoriesCollection.add(repoObj);
+	this.monitoredRepositories.fetch(
+	  {
+	    success: function(collection, response, options) {
+	      // alert('Monitored Repositories have been fetched successfully...');
+	    }, 
+	    
+	    error: function(collection, response, options) {
+	      alert("Monitored Repositories experienced an error on fetch()...");
+	    }
 	  }
 	);
 	
-    this.monitoredRepositoriesView = new PullRequestManager.Views.Repositories(
+	var monitoredRepositoriesCollection = this.monitoredRepositories;
+	
+	this.monitoredRepositoriesView = new PullRequestManager.Views.Repositories(
       {collection: this.monitoredRepositories}
     );
     
     $('#repositoriesview').html(this.monitoredRepositoriesView.render().$el);
-    
+
     /************************************
     ** END MONITORED REPOSITORY VIEW **
     ************************************/
@@ -323,24 +335,32 @@ PullRequestManager.Views.RepoManagerApp = Backbone.View.extend({
     ** START REPOSITORY MENU VIEW **
     *******************************/
 
+	// sync the repo data from the server with the Monitored Repositories collection
+	_.each(
+	  this.arrRepoObjs,
+	  this.syncAllReposWithMonitoredRepos,
+	  this
+	);
+
     // create a collection for the repositories menu based on the 
     // selected value in the owners dropdown menu
     var selectedOwner = $('#ownersmenu option:selected').text();
 
-	var reposMenuRepositoriesCollection = new Backbone.Collection(
-	  this.allRepositoriesCollection.filter(
-	    function(repo) {
-	      return((repo.get('owner') == selectedOwner) && (repo.get('monitored') == false));
-	    }
-	  )
+    var arrMenuRepoObjs = _.filter(
+      this.arrRepoObjs,
+	  function(repoObj) {
+	    return((repoObj.owner === selectedOwner) && (repoObj.monitored === false));
+	  }
 	);
     
-    // alert("reposMenuRepositoriesCollection.length: " + reposMenuRepositoriesCollection.length);
+	this.reposMenuRepositoriesCollection = new PullRequestManager.Collections.MenuRepositories(
+	  arrMenuRepoObjs
+    );
     
     // build the repositories menu
     this.reposMenu = new PullRequestManager.Views.RepositoriesMenu(
       {
-        collection: reposMenuRepositoriesCollection,
+        collection: this.reposMenuRepositoriesCollection,
         el: $('#reposmenu')
       }
     );
@@ -349,28 +369,62 @@ PullRequestManager.Views.RepoManagerApp = Backbone.View.extend({
     /*****************************
     ** END REPOSITORY MENU VIEW **
     *****************************/
-    
+
     $('#loginform').remove();
     $('#addrepositorypanel').toggleClass('hidden');
 	$('#repositoriesview').toggleClass('hidden');
 
   },
   
+  syncAllReposWithMonitoredRepos: function(repoObj, index, list) {
+    
+    // if the repoURL property of the repoObj parameter matches any
+    // of the repoURL properties in the monitored repositories, the 
+    // monitored property is set to true, else it is set to false.
+    
+    var matchingMonitoredRepo = this.monitoredRepositories.find(
+      
+      function(monitoredRepoObj) {
+        
+        if (repoObj.repoURL === monitoredRepoObj.get('repoURL')) {
+        
+          repoObj.monitored = true;
+          monitoredRepoObj.set('name', repoObj.name);
+          monitoredRepoObj.set('openPullRequests', repoObj.openPullRequests);
+          
+          return true;
+        
+        } else {
+        
+          repoObj.monitored = false;
+          
+          return false;
+          
+        }
+        
+      }
+      
+    );
+    
+  },
+  
   updateRepositoriesMenu: function() {
     
     var selectedOwner = $('#ownersmenu option:selected').text();
 
-    var filteredReposCollection = new Backbone.Collection(
-      this.allRepositoriesCollection.filter(
-        function(repoObj) {
-          return((repoObj.get('owner') == selectedOwner) && (repoObj.get('monitored') == false));
-        }
-      )
+    var arrMenuRepoObjs = _.filter(
+      this.arrRepoObjs,
+	  function(repoObj) {
+	    return((repoObj.owner === selectedOwner) && (repoObj.monitored === false));
+	  }
+	);
+    
+	this.reposMenuRepositoriesCollection = new PullRequestManager.Collections.MenuRepositories(
+	  arrMenuRepoObjs
     );
-    
-    // alert("filteredReposCollection.length: " + filteredReposCollection.length);
-    this.reposMenu.collection = filteredReposCollection;
-    
+
+    this.reposMenu.collection = this.reposMenuRepositoriesCollection;
+
     this.reposMenu.render();
     
   },
@@ -381,40 +435,25 @@ PullRequestManager.Views.RepoManagerApp = Backbone.View.extend({
 
     var selectedRepo = $('#reposmenu option:selected').text();
     
-    var repoToMonitor = this.allRepositoriesCollection.findWhere(
+    var repoToMonitor = this.reposMenuRepositoriesCollection.findWhere(
       {
         owner: selectedOwner,
         name: selectedRepo
       }
     );
     
-    repoToMonitor.save({monitored: true});
-    
-    this.updateRepositoriesMenu();
-    
-    this.updateRepositoriesView();
-    
-  },
-  
-  updateRepositoriesView: function() {
-  
-    var newMonitoredReposCollection = new Backbone.Collection(
-      this.allRepositoriesCollection.filter(
-        function(repoObj) {
-          return(repoObj.get('monitored') == true);
-        }
-      ),
+    this.monitoredRepositories.create(
       {
-        comparator: function(model) {
-	      return(-(model.get('openPullRequests')));
-	    }
+        owner: selectedOwner,
+        name: selectedRepo,
+        repoURL: repoToMonitor.get('repoURL'),
+        openPullRequests: repoToMonitor.get('openPullRequests'),
+        monitored: true
       }
     );
-
-    this.monitoredRepositoriesView.collection = newMonitoredReposCollection;
     
-    $('#repositoriesview').html(this.monitoredRepositoriesView.render().$el);
-
+    repoToMonitor.destroy();
+    
   }
-
+  
 });
