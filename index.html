@@ -11,17 +11,25 @@
 
     <div id="repomanagerapp">
     
-      <div id="loginform">
+      <div id="loginScreen">
+      
         <p>Please enter your Github account information in the form below, then click the Login button.</p>
-        <div id="usernameDiv">
-          <label for="name">Username: </label>
-          <input type="text" name="username" id="username" class="text ui-widget-content ui-corner-all">
+        
+        <div id="loginForm">
+          
+          <div id="usernameDiv">
+            <label for="name" id="nameLabel">Username: </label>
+            <input type="text" name="username" id="username" class="text ui-widget-content ui-corner-all">
+          </div>
+          
+          <div id="passwordDiv">
+            <label for="password" id="passwordLabel">Password: </label>
+            <input type="password" name="password" id="password" class="text ui-widget-content ui-corner-all"></br>
+          </div>
+          <div id="loginButtonDiv">
+            <button id="loginButton"> Login</button>
+          </div>
         </div>
-        <div id="passwordDiv">
-          <label for="password">Password: </label>
-          <input type="password" name="password" id="password" class="text ui-widget-content ui-corner-all"></br>
-        </div>
-        <button id="loginbutton">Login</button>
       </div>
     
       <div id="addrepositorypanel" class="hidden">

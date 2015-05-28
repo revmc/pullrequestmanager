@@ -6,18 +6,51 @@
 body {
   font-family: Arial, Verdana, sans-serif;
   padding: 20px;
-  background-color: #eeeeee; }
+  background-color: #dddddd; }
 
-#loginform {
-  width: 655px;
+#loginScreen {
+  width: 660px;
+  margin-top: 10px;
+  margin-bottom: 10px;
   margin-left: auto;
-  margin-right: auto; }
+  margin-right: auto;
+  padding: 30px 20px 70px;
+  border: 1px solid #18d3ff;
+  background-color: #eeeeee;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  -ms-border-radius: 10px;
+  border-radius: 10px; }
 
-#usernameDiv, #passwordDiv, #loginbutton {
+#loginForm {
+  position: relative;
+  top: 30px;
+  width: 300px;
+  background-color: #ffffff;
+  border: 1px solid #18d3ff;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  -ms-border-radius: 10px;
+  border-radius: 10px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 10px; }
+
+#usernameDiv, #passwordDiv, #loginButtonDiv {
   width: 200px;
   margin-left: auto;
   margin-right: auto;
   display: block;
+  padding: 10px; }
+
+#usernameLabel, #passwordLabel {
+  float: left; }
+
+#username, #password {
+  float: right; }
+
+#loginButton {
+  width: 200px;
   padding: 10px; }
 
 #repomanagerapp {

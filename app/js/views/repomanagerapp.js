@@ -370,7 +370,7 @@ PullRequestManager.Views.RepoManagerApp = Backbone.View.extend({
     ** END REPOSITORY MENU VIEW **
     *****************************/
 
-    $('#loginform').remove();
+    $('#loginScreen').remove();
     $('#addrepositorypanel').toggleClass('hidden');
 	$('#repositoriesview').toggleClass('hidden');
 
