@@ -223,7 +223,7 @@ PullRequestManager.Views.RepoManagerApp = Backbone.View.extend({
         repoManager.arrRepoObjs.push(
           {
             name: repoObj.name,
-            repoURL: repoObj.url,
+            repoURL: repoObj.html_url,
             openPullRequests: repoObj.open_issues,
             owner: ownerName
           }
@@ -378,9 +378,15 @@ PullRequestManager.Views.RepoManagerApp = Backbone.View.extend({
   
   syncAllReposWithMonitoredRepos: function(repoObj, index, list) {
     
+    // The syncAllReposWithMonitoredRepos adds monitored property to the 
+    // repository data objects that were constructed from the github server queries.
+    
+    // set a default value of false for the monitored property
+    repoObj.monitored = false;
+        
     // if the repoURL property of the repoObj parameter matches any
     // of the repoURL properties in the monitored repositories, the 
-    // monitored property is set to true, else it is set to false.
+    // monitored property is set to true
     
     var matchingMonitoredRepo = this.monitoredRepositories.find(
       
@@ -394,13 +400,9 @@ PullRequestManager.Views.RepoManagerApp = Backbone.View.extend({
           
           return true;
         
-        } else {
-        
-          repoObj.monitored = false;
-          
-          return false;
-          
         }
+        
+        return false;
         
       }
       
