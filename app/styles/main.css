@@ -128,7 +128,9 @@ a:hover {
   float: left; }
 
 .deleteRepoButton {
-  float: right; }
+  float: right;
+  width: 50px;
+  padding: 5px; }
 
 #repositories-list {
   list-style-type: none; }
