@@ -1,11 +1,11 @@
 PullRequestManager.Views.RepoManagerApp = Backbone.View.extend({
 
-  el: $('#repomanagerapp'),
+  el: $('#repoManagerApp'),
   
   events: {
-    "click #monitorbutton":	"monitorRepo",
-    "click #loginbutton":	"login",
-    "change #ownersmenu":	"updateRepositoriesMenu",
+    "click #monitorButton":	"monitorRepo",
+    "click #loginButton":	"login",
+    "change #ownersMenu":	"updateRepositoriesMenu",
     "keypress #password":	"evalPasswordKeyPress"
   },
 
@@ -29,9 +29,9 @@ PullRequestManager.Views.RepoManagerApp = Backbone.View.extend({
   
   login: function() {
     
-    var username = $('#username').val(); // prompt("Github user name");
+    var username = $('#username').val();
     this.username = username;
-    var password = $('#password').val(); // prompt("Github password");
+    var password = $('#password').val();
 
     // configure ajax to always send the username + password in the header
 	$.ajaxSetup(
@@ -287,7 +287,7 @@ PullRequestManager.Views.RepoManagerApp = Backbone.View.extend({
 
     var owners = new PullRequestManager.Collections.Owners(this.arrOwnerObjs);
     var ownersMenu = new PullRequestManager.Views.OwnersMenu({collection: owners});
-    $('#ownersmenu').html(ownersMenu.render().$el.html());
+    $('#ownersMenu').html(ownersMenu.render().$el.html());
       
     /************************************
     ** END OWNER MENU VIEW **
@@ -324,7 +324,7 @@ PullRequestManager.Views.RepoManagerApp = Backbone.View.extend({
       {collection: this.monitoredRepositories}
     );
     
-    $('#repositoriesview').html(this.monitoredRepositoriesView.render().$el);
+    $('#repositoriesView').html(this.monitoredRepositoriesView.render().$el);
 
     /************************************
     ** END MONITORED REPOSITORY VIEW **
@@ -344,7 +344,7 @@ PullRequestManager.Views.RepoManagerApp = Backbone.View.extend({
 
     // create a collection for the repositories menu based on the 
     // selected value in the owners dropdown menu
-    var selectedOwner = $('#ownersmenu option:selected').text();
+    var selectedOwner = $('#ownersMenu option:selected').text();
 
     var arrMenuRepoObjs = _.filter(
       this.arrRepoObjs,
@@ -361,7 +361,7 @@ PullRequestManager.Views.RepoManagerApp = Backbone.View.extend({
     this.reposMenu = new PullRequestManager.Views.RepositoriesMenu(
       {
         collection: this.reposMenuRepositoriesCollection,
-        el: $('#reposmenu')
+        el: $('#reposMenu')
       }
     );
     this.reposMenu.render();
@@ -371,8 +371,8 @@ PullRequestManager.Views.RepoManagerApp = Backbone.View.extend({
     *****************************/
 
     $('#loginScreen').remove();
-    $('#addrepositorypanel').toggleClass('hidden');
-	$('#repositoriesview').toggleClass('hidden');
+    $('#addRepositoryPanel').toggleClass('hidden');
+	$('#repositoriesView').toggleClass('hidden');
 
   },
   
@@ -412,7 +412,7 @@ PullRequestManager.Views.RepoManagerApp = Backbone.View.extend({
   
   updateRepositoriesMenu: function() {
     
-    var selectedOwner = $('#ownersmenu option:selected').text();
+    var selectedOwner = $('#ownersMenu option:selected').text();
 
     var arrMenuRepoObjs = _.filter(
       this.arrRepoObjs,
@@ -433,9 +433,9 @@ PullRequestManager.Views.RepoManagerApp = Backbone.View.extend({
   
   monitorRepo: function() {
     
-    var selectedOwner = $('#ownersmenu option:selected').text();
+    var selectedOwner = $('#ownersMenu option:selected').text();
 
-    var selectedRepo = $('#reposmenu option:selected').text();
+    var selectedRepo = $('#reposMenu option:selected').text();
     
     var repoToMonitor = this.reposMenuRepositoriesCollection.findWhere(
       {

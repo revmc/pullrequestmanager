@@ -2,10 +2,10 @@
 /*! normalize.css v3.0.1 | MIT License | git.io/normalize */
 
 @mixin border-radius($radius) {
-    -webkit-border-radius: $radius;
-    -moz-border-radius: $radius;
-    -ms-border-radius: $radius;
-    border-radius: $radius;
+	-webkit-border-radius: $radius;
+	-moz-border-radius: $radius;
+	-ms-border-radius: $radius;
+	border-radius: $radius;
 }
 
 * {
@@ -14,100 +14,134 @@
 }
 
 body {
-  font-family: Arial, Verdana, sans-serif;
-  padding: 20px;
-  background-color: #dddddd;
+	font-family: Arial, Verdana, sans-serif;
+	padding: 20px;
+	background-color: #dddddd;
+}
+
+h3 {
+	text-align: center;
+	margin: 10px;
+}
+
+a {
+  text-decoration: none;
+  color: #0808e0;
+}
+
+a:hover {
+  text-decoration: underline;
 }
 
 #loginScreen {
-  width: 660px;
-  margin-top: 10px;
-  margin-bottom: 10px;
-  margin-left: auto;
-  margin-right: auto;
-  padding: 30px 20px 70px;
-  border: 1px solid rgb(24, 211, 255);
-  background-color: #eeeeee;
-  @include border-radius(10px);  
+	width: 660px;
+	margin-top: 10px;
+	margin-bottom: 10px;
+	margin-left: auto;
+	margin-right: auto;
+	padding: 30px 20px 70px;
+	border: 1px solid #18d3ff;
+	background-color: #eeeeee;
+	@include border-radius(10px);	
 }
 	
 #loginForm {
-  position: relative;
-  top: 30px;
-  width: 300px;
-  background-color: #ffffff;
-  border: 1px solid rgb(24, 211, 255);
-  @include border-radius(10px);
-  margin-left: auto;
-  margin-right: auto;
-  padding: 10px;
+	position: relative;
+	top: 30px;
+	width: 300px;
+	background-color: #ffffff;
+	border: 1px solid #18d3ff;
+	@include border-radius(10px);
+	margin-left: auto;
+	margin-right: auto;
+	padding: 10px;
 }
 
 #usernameDiv, #passwordDiv, #loginButtonDiv {
-  width: 210px;
-  margin-left: auto;
-  margin-right: auto;
-  display: block;
-  padding: 10px;
+	width: 210px;
+	margin-left: auto;
+	margin-right: auto;
+	display: block;
+	padding: 10px;
 }
 
+/*
 #usernameLabel, #passwordLabel {
-  float: left;
+	float: left;
 }
+*/
 
 #username, #password {
-  float: right;
+	float: right;
 }
 
 #loginButton {
-  width: 210px;
-  padding: 10px;
+	width: 210px;
+	padding: 10px;
 }
 
-#repomanagerapp {
-  padding-left: 25%;
-  padding-right: 25%;
+#repoManagerApp {
+	padding-left: 25%;
+	padding-right: 25%;
 }
 
-#addrepositorypanel {
+#addRepositoryPanel {
 	width: 100%;
-	height: 50px;
+	height: 200px;
 	minWidth: 100px;
 	minHeight: 50px;
-	border: 1px solid black;
-	padding-left: 20px;
-	padding-right: 20px;
-	padding-top: 10px;
-	z-index: 2;
-
+	background-color: #eeeeee;
+	border: 1px solid #18d3ff;
+	@include border-radius(10px);
+	margin: 10px auto;
+	padding: 20px;
 }
 
-#repositoriesview {
+#addReposForm {
+    width: 300px;
+    margin: 20px auto;
+    padding: 10px;
+    background-color: #ffffff;
+	border: 1px solid #18d3ff;
+	@include border-radius(10px);
+}
+
+#ownerMenuDiv, #reposMenuDiv, #monitorButtonDiv {
+	margin-left: auto;
+	margin-right: auto;
+	width: 260px;
+	padding: 10px;
+}
+
+#monitorButton {
+	width: 260px;
+	padding: 10px;
+}
+
+#repositoriesView {
 	width: 100%;
-	// height: 100%;
 	border: 1px solid black;
 	overflow: auto;
-	padding-left: 20px;
-	padding-right: 20px;
+	padding: 20px;
+	border: 1px solid #18d3ff;
+	background-color: #eeeeee;
+	@include border-radius(10px);
 }
 
 .hidden {
 	visibility: hidden;
 }
 
-#ownersmenu {
-    width: 200px;
-}
-
-#reposmenu {
+#ownersMenu, #reposMenu {
 	width: 200px;
+	float: right;
 }
 
 .repoData {
 	float: left;
 }
 
-.deleterepobutton {
+.deleteRepoButton {
 	float: right;
 }
 
@@ -117,5 +151,10 @@ body {
 
 .repoDataListItem {
 	border-bottom: 1px dotted black;
-	height: 100px;
+	height: 60px;
+	background-color: #ffffff;
+	border: 1px solid #18d3ff;
+	@include border-radius(10px);
+	padding: 10px;
+	margin: 10px;
 }
