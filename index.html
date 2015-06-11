@@ -9,7 +9,7 @@
   </head>
   <body>
 
-    <div id="repomanagerapp">
+    <div id="repoManagerApp">
     
       <div id="loginScreen">
       
@@ -32,35 +32,46 @@
         </div>
       </div>
     
-      <div id="addrepositorypanel" class="hidden">
-        Owner:
-        <select id="ownersmenu">
-        </select>
-        Repo:
-        <select id="reposmenu">
-        </select>
-      
-        <button id="monitorbutton">Monitor</button>
+      <div id="addRepositoryPanel" class="hidden">
+        
+        <p>Select repositories then click Monitor to add them to the list of monitored repositories.</p>
+          
+        <div id="addReposForm">
+        
+          <div id="ownerMenuDiv">
+            <label for="owner" id="ownerLabel">Owner:</label>
+            <select id="ownersMenu"></select>
+          </div>
+          
+          <div id="reposMenuDiv">
+            <label for="repo" id="repoLabel">Repo:</label>
+            <select id="reposMenu"></select>
+          </div>
+          
+          <div id="monitorButtonDiv">
+            <button id="monitorButton">Monitor</button>
+          </div>
+          
+        </div>
         
       </div>
 	
-      <div id="repositoriesview" class="hidden">
-      </div>
-      
+      <div id="repositoriesView" class="hidden"></div>
+
     </div>
  
     <script type="text/template" id="tpl-repositories">
-      <h2 class="page-header text-center">List of repositories</h2>
+      <h3>Monitored Repositories</h2>
       <ul class="media-list row" id="repositories-list"></ul>
     </script>
     
     <script type="text/template" id="tpl-repository">
       <div class="repoData">
-        <div class="repoName"><h4><%- name %></h4></div>
-        <div class="repoURL">URL: <%- repoURL %></div>
+        <div class="repoName"><a href="<%- repoURL %>"><h4><%- name %></a></h4></div>
+        <div class="repoOwner">Owner: <%- owner %></div>
         <div class="repoOpenPullRequests">Open pull requests: <%- openPullRequests %></div>
       </div>
-      <button class="deleterepobutton">Delete</button>
+      <button class="deleteRepoButton">Delete</button>
     </script>
    
 	<script src="bower_components/jquery/dist/jquery.js"></script>

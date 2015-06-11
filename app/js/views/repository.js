@@ -5,7 +5,7 @@ PullRequestManager.Views.Repository = Backbone.View.extend({
   template: _.template($('#tpl-repository').html()),
   
   events: {
-    "click .deleterepobutton" : "deleteRepo"
+    "click .deleteRepoButton" : "deleteRepo"
   },
   
   initialize: function() {
