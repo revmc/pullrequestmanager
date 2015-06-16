@@ -12,22 +12,7 @@
   
   start: function(data) {
   
-    window.PullRequestManager.Router = Backbone.Router.extend({
-    
-      routes: {
-        '': "index"
-      },
-      
-      index: function() {
-      
-        var RepoManagerApp = new PullRequestManager.Views.RepoManagerApp();
-        
-      }
-
-    });
-    
-    new window.PullRequestManager.Router();
-    Backbone.history.start();
+    var RepoManagerApp = new PullRequestManager.Views.RepoManagerApp();
     
   }
   
