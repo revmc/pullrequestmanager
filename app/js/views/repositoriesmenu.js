@@ -1,5 +1,9 @@
 PullRequestManager.Views.RepositoriesMenu = Backbone.View.extend({
 
+  initialize: function() {
+    this.listenTo(this.collection, 'remove', this.render);
+  },
+  
   renderReposMenu: function(repository) {
     
     var reposMenuOption = new PullRequestManager.Views.RepositoriesMenuOption({model: repository});

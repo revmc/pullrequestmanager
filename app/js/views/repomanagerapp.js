@@ -60,7 +60,7 @@ PullRequestManager.Views.RepoManagerApp = Backbone.View.extend({
     ).fail(
         
       function(data) {
-        alert("Connection failed: " + data.status + ' (' + data.statusText + ')');
+        console.log("Connection failed: " + data.status + ' (' + data.statusText + ')');
       }
         	
     );
@@ -126,7 +126,7 @@ PullRequestManager.Views.RepoManagerApp = Backbone.View.extend({
     ).fail(
 
       function(data) {
-        alert("failed");
+        console.log("failed");
       }
     
     );
@@ -202,7 +202,7 @@ PullRequestManager.Views.RepoManagerApp = Backbone.View.extend({
     ).fail(
 
       function(data) {
-        alert("failed");
+        console.log("failed");
       }
     
     );
@@ -309,11 +309,11 @@ PullRequestManager.Views.RepoManagerApp = Backbone.View.extend({
 	this.monitoredRepositories.fetch(
 	  {
 	    success: function(collection, response, options) {
-	      // alert('Monitored Repositories have been fetched successfully...');
+	      // console.log('Monitored Repositories have been fetched successfully...');
 	    }, 
 	    
 	    error: function(collection, response, options) {
-	      alert("Monitored Repositories experienced an error on fetch()...");
+	      console.log("Monitored Repositories experienced an error on fetch()...");
 	    }
 	  }
 	);
@@ -436,14 +436,14 @@ PullRequestManager.Views.RepoManagerApp = Backbone.View.extend({
     var selectedOwner = $('#ownersMenu option:selected').text();
 
     var selectedRepo = $('#reposMenu option:selected').text();
-    
+
     var repoToMonitor = this.reposMenuRepositoriesCollection.findWhere(
       {
         owner: selectedOwner,
         name: selectedRepo
       }
     );
-    
+
     this.monitoredRepositories.create(
       {
         owner: selectedOwner,
@@ -454,7 +454,7 @@ PullRequestManager.Views.RepoManagerApp = Backbone.View.extend({
       }
     );
     
-    repoToMonitor.destroy();
+    this.reposMenuRepositoriesCollection.remove(repoToMonitor);
     
   }
   
